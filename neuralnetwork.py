@@ -48,10 +48,10 @@ class NeuralNetwork():
             hidden.map(NeuralNetwork.dsigmoid)
             hidden.hadamard(hidden_error)
             hidden *= LR
-            no_bias_hidden = Matrix(2, 1)
-            no_bias_hidden.initValues(hidden.matrix[:2])
+            no_bias_hidden = Matrix(hidden.n_rows-1, 1)
+            no_bias_hidden.initValues(hidden.matrix[:hidden.n_rows-1])
             delta_HW = no_bias_hidden*input_m.getTranspose()
-            self.HW += delta_HW #ERROR ON CHANGING HIDDEN NODES NUMBER
+            self.HW += delta_HW
 
     # CHANGE TO USE MAP METHOD IN MATRIX
     @staticmethod
