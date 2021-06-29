@@ -35,9 +35,9 @@ class NeuralNetwork():
             guess = self.guess(x[i])
             y_m = Matrix(len(y[i]), 1)
             y_m.initValues(y[i])
-            error = y_m - guess
-            print(error)
-            
+            guess_error = y_m - guess
+
+            hidden_error = self.OW*guess_error          
 
     # CHANGE TO USE MAP METHOD IN MATRIX
     @staticmethod

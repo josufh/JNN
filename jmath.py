@@ -36,6 +36,17 @@ class Matrix:
         self.n_rows = temp
         self.initValues(cols)
     
+    def getTranspose(self):
+        cols = []
+        for i in range(0, self.n_cols):
+            col = []
+            for j in range(0, self.n_rows):
+                col += [self.matrix[i + j*self.n_cols]]
+            cols += col
+        new_matrix = Matrix(self.n_cols, self.n_rows)
+        new_matrix.initValues(cols)
+        return new_matrix
+    
     def map(self, func):
         for i in range(0, self.n_elements):
             self.matrix[i] = func(self.matrix[i])
