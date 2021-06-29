@@ -22,12 +22,12 @@ class NeuralNetwork():
         input_matrix = Matrix(self.n_i+1, 1)
         input_matrix.initValues(inputs)
         hidden = self.HW*input_matrix
-        hidden = NeuralNetwork.threshhold(hidden)
+        hidden = NeuralNetwork.sigmoid(hidden)
         
         hidden.matrix += [1]
         hidden.n_rows += 1
         output_matrix = self.OW*hidden
-        output_matrix = NeuralNetwork.threshhold(output_matrix)
+        output_matrix = NeuralNetwork.sigmoid(output_matrix)
         return output_matrix
 
     # CHANGE TO USE MAP METHOD IN MATRIX
