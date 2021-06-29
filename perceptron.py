@@ -22,12 +22,15 @@ class Perceptron:
         output = sign(sum)
         return output
 
-    def train(self, input_, target):
-        guess = self.guess(input_)
-        error = target - guess
+    def correct(self, error, input_):
         for i in range(0, len(self.weights)):
             self.weights[i] += error * input_[i] * self.lr
         self.b_weight += error * self.lr
+
+    def train(self, input_, target):
+        guess = self.guess(input_)
+        error = target - guess
+        self.correct(error, input_)            
 
     def accuracy(self, inputs, targets):
         total = len(targets)
