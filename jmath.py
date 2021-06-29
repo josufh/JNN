@@ -59,6 +59,25 @@ class Matrix:
 
     __radd__ = __add__
 
+    def __sub__(self, v):
+        if isinstance(v, int) or isinstance(v, float):
+            values = self.matrix.copy()
+            for i in range(0, self.n_elements):
+                values[i] -= v
+        if isinstance(v, Matrix):
+            if self.n_rows != v.n_rows or self.n_cols != v.n_cols:
+                print("MATRIX error on add: matrix aren't the same size.")
+                return self
+            values = self.matrix.copy()
+            for i in range(0, self.n_elements):
+                values[i] -= v.matrix[i]
+
+        new_matrix = Matrix(self.n_rows, self.n_cols)
+        new_matrix.initValues(values)
+        return new_matrix
+    
+    __rsub__ = __sub__
+
     def __mul__(self, v):
         if isinstance(v, int) or isinstance(v, float):
             values = self.matrix.copy()

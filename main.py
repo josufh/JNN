@@ -1,9 +1,8 @@
 from neuralnetwork import NeuralNetwork
 
-nn = NeuralNetwork(2, 2, 1)
+nn = NeuralNetwork(2, 2, 2)
 
-inputs = [1, 0]
+train_x = [[0, 0], [1, 0], [0, 1], [1, 1]]
+train_y = [[0, 1], [1, 0], [1, 0], [0, 1]]
 
-guess = nn.guess(inputs)
-
-print(guess)
+nn.train(train_x, train_y)

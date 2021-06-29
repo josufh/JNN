@@ -30,6 +30,15 @@ class NeuralNetwork():
         output_matrix = NeuralNetwork.sigmoid(output_matrix)
         return output_matrix
 
+    def train(self, x, y):
+        for i in range(0, len(x)):
+            guess = self.guess(x[i])
+            y_m = Matrix(len(y[i]), 1)
+            y_m.initValues(y[i])
+            error = y_m - guess
+            print(error)
+            
+
     # CHANGE TO USE MAP METHOD IN MATRIX
     @staticmethod
     def sigmoid(matrix):
