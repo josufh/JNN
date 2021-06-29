@@ -51,6 +51,10 @@ class Matrix:
         for i in range(0, self.n_elements):
             self.matrix[i] = func(self.matrix[i])
 
+    def hadamard(self, v):
+        for i in range(0, self.n_elements):
+            self.matrix[i] *= v.matrix[i]
+
     def __add__(self, v):
         if isinstance(v, int) or isinstance(v, float):
             values = self.matrix.copy()
