@@ -1,7 +1,7 @@
 from jmath import Matrix
 import math
 
-LR = 0.01
+LR = 0.001
 
 class NeuralNetwork():
 
@@ -36,8 +36,9 @@ class NeuralNetwork():
             y_m = Matrix(len(y[i]), 1)
             y_m.initValues(y[i])
             guess_error = y_m - guess
-
-            hidden_error = self.OW*guess_error          
+            OW_t = self.OW.getTranspose()
+            hidden_error = OW_t*guess_error
+            print(hidden_error)          
 
     # CHANGE TO USE MAP METHOD IN MATRIX
     @staticmethod
