@@ -1,7 +1,7 @@
 from jmath import Matrix
 import math
 
-LR = 0.01
+LR = 0.5
 
 class NeuralNetwork():
 
@@ -18,9 +18,9 @@ class NeuralNetwork():
         self.OW.rand(-1, 1)
 
     def guess(self, inputs):
-        inputs += [1]
+        bias_input_list = inputs + [1]
         input_matrix = Matrix(self.n_i+1, 1)
-        input_matrix.initValues(inputs)
+        input_matrix.initValues(bias_input_list)
         hidden = self.HW*input_matrix
         hidden = NeuralNetwork.sigmoid(hidden)
         
@@ -74,7 +74,7 @@ class NeuralNetwork():
     def threshhold(matrix):
         values = []
         for m in matrix.matrix:
-            if m < 0: values += [0]
+            if m < 0.5: values += [0]
             else: values += [1]
         new_matrix = Matrix(matrix.n_rows, matrix.n_cols)
         new_matrix.initValues(values)
