@@ -12,11 +12,10 @@ class Perceptron:
     def __init__(self, n, lr):
         for i in range(0, n):
             self.weights += [random.uniform(-1, 1)]
-        self.b_weight = random.uniform(-1, 1)
         self.lr = lr
 
     def guess(self, inputs):
-        sum = self.b_weight
+        sum = 1
         for i in range(0, len(self.weights)):
             sum += inputs[i] * self.weights[i]
         output = sign(sum)
@@ -25,7 +24,6 @@ class Perceptron:
     def correct(self, error, input_):
         for i in range(0, len(self.weights)):
             self.weights[i] += error * input_[i] * self.lr
-        self.b_weight += error * self.lr
 
     def train(self, input_, target):
         guess = self.guess(input_)

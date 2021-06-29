@@ -1,4 +1,5 @@
-from perceptron import Perceptron
+from jmath import Matrix
+
 LR = 0.01
 
 class NeuralNetwork():
@@ -8,11 +9,10 @@ class NeuralNetwork():
         self.n_i = n_inputs
         self.n_h = n_hidden
         self.n_o = n_outputs
-        
-        self.h_nodes = []
-        for i in range(0, self.n_h):
-            self.h_nodes += [Perceptron(self.n_i, LR)]
 
-        self.o_nodes = []
-        for i in range(0, self.n_o):
-            self.o_nodes += [Perceptron(self.n_h, LR)]
+        self.HW = Matrix(n_hidden, n_inputs+1)
+        self.HW.rand(-1, 1)
+        print(self.HW)
+
+    def guess(self, inputs):
+        pass
