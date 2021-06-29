@@ -51,7 +51,7 @@ class NeuralNetwork():
             no_bias_hidden = Matrix(2, 1)
             no_bias_hidden.initValues(hidden.matrix[:2])
             delta_HW = no_bias_hidden*input_m.getTranspose()
-            self.HW += delta_HW
+            self.HW += delta_HW #ERROR ON CHANGING HIDDEN NODES NUMBER
 
     # CHANGE TO USE MAP METHOD IN MATRIX
     @staticmethod

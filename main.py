@@ -1,10 +1,10 @@
 import random, math
 from neuralnetwork import NeuralNetwork
 
-nn = NeuralNetwork(2, 2, 1)
+nn = NeuralNetwork(2, 2, 2)
 
 train_x = [[0, 0], [1, 0], [0, 1], [1, 1]]
-train_y = [[0], [1], [1], [0]]
+train_y = [[0, 1], [1, 0], [1, 0], [0, 1]]
 
 data_x = []
 data_y = []
