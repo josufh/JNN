@@ -1,4 +1,5 @@
 from jmath import Matrix
+import math
 
 LR = 0.01
 
@@ -14,5 +15,13 @@ class NeuralNetwork():
         self.HW.rand(-1, 1)
         print(self.HW)
 
+        self.OW = Matrix(n_outputs, n_hidden+1)
+        self.OW.rand(-1, 1)
+        print(self.OW)
+
     def guess(self, inputs):
         pass
+
+    @staticmethod
+    def sigmoid(x):
+        return 1/(1+pow(math.e, -x))
