@@ -24,6 +24,18 @@ class Matrix:
         for i in range(0, self.n_elements):
             self.matrix[i] = random.uniform(min, max)
 
+    def transpose(self):
+        cols = []
+        for i in range(0, self.n_cols):
+            col = []
+            for j in range(0, self.n_rows):
+                col += [self.matrix[i + j*self.n_cols]]
+            cols += col
+        temp = self.n_cols
+        self.n_cols = self.n_rows
+        self.n_rows = temp
+        self.initValues(cols)
+
     def __add__(self, v):
         if isinstance(v, int) or isinstance(v, float):
             values = self.matrix.copy()
