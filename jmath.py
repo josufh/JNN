@@ -35,6 +35,10 @@ class Matrix:
         self.n_cols = self.n_rows
         self.n_rows = temp
         self.initValues(cols)
+    
+    def map(self, func):
+        for i in range(0, self.n_elements):
+            self.matrix[i] = func(self.matrix[i])
 
     def __add__(self, v):
         if isinstance(v, int) or isinstance(v, float):
@@ -97,6 +101,7 @@ class Matrix:
     __rmul__ = __mul__
 
     def __str__(self):
+
         s = '\n' + str(self.n_rows) + 'x' + str(self.n_cols) + ' matrix\n'
         for i in range(0, self.n_rows):
             s += '  '

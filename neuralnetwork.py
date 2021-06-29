@@ -30,11 +30,12 @@ class NeuralNetwork():
         output_matrix = NeuralNetwork.threshhold(output_matrix)
         return output_matrix
 
+    # CHANGE TO USE MAP METHOD IN MATRIX
     @staticmethod
     def sigmoid(matrix):
         values = []
         for m in matrix.matrix:
-            values += [1/(1+pow(math.e, -m))]
+            values += [1/(1+math.exp(-m))]
         new_matrix = Matrix(matrix.n_rows, matrix.n_cols)
         new_matrix.initValues(values)
         return new_matrix
