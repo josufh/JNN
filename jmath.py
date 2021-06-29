@@ -51,6 +51,7 @@ class Matrix:
         for i in range(0, self.n_elements):
             self.matrix[i] = func(self.matrix[i])
 
+    # CHECK IF MATRIX ARE THE SAME SIZE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     def hadamard(self, v):
         for i in range(0, self.n_elements):
             self.matrix[i] *= v.matrix[i]

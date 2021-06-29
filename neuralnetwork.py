@@ -1,7 +1,7 @@
 from jmath import Matrix
 import math
 
-LR = 0.001
+LR = 0.01
 
 class NeuralNetwork():
 
@@ -31,7 +31,7 @@ class NeuralNetwork():
         return output_matrix, hidden, input_matrix
 
     def train(self, x, y):
-        for i in range(0, 1):
+        for i in range(0, len(x)):
             guess, hidden, input_m = self.guess(x[i])
             y_m = Matrix(len(y[i]), 1)
             y_m.initValues(y[i])
