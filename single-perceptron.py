@@ -1,6 +1,6 @@
 import random
-from perceptron import Perceptron
-from point import Point
+from modules.perceptron import Perceptron
+from modules.point import Point
 
 p = Perceptron(2, 0.001)
 
