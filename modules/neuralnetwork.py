@@ -1,11 +1,9 @@
 from modules.jmath import Matrix
 import math
 
-LR = 0.5
+LR = 0.05
 
 class NeuralNetwork():
-
-
     def __init__(self, n_inputs, n_hidden, n_outputs):
         self.n_i = n_inputs
         self.n_h = n_hidden
@@ -39,13 +37,13 @@ class NeuralNetwork():
             OW_t = self.OW.getTranspose()
             hidden_error = OW_t*guess_error
             
-            guess.map(NeuralNetwork.dsigmoid)
+            guess.f(NeuralNetwork.dsigmoid)
             guess.hadamard(guess_error)
             guess *= LR
             delta_OW = guess*hidden.getTranspose()
             self.OW += delta_OW
 
-            hidden.map(NeuralNetwork.dsigmoid)
+            hidden.f(NeuralNetwork.dsigmoid)
             hidden.hadamard(hidden_error)
             hidden *= LR
             no_bias_hidden = Matrix(hidden.n_rows-1, 1)

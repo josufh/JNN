@@ -1,5 +1,9 @@
 import random
 
+def map(v, x1, x2, y1, y2):
+    m = (y2 - y1)/(x2 - x1)
+    return m*(v - x1) + y1
+
 class Matrix:
 
     def __init__(self, rows, cols):
@@ -46,7 +50,7 @@ class Matrix:
         new_matrix.initValues(cols)
         return new_matrix
     
-    def map(self, func):
+    def f(self, func):
         for i in range(0, self.n_elements):
             self.matrix[i] = func(self.matrix[i])
 
