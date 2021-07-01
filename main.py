@@ -1,10 +1,9 @@
 import random, math, pygame
-from pygame import color
 from modules.neuralnetwork import NeuralNetwork as NN
 from pygame import Color
 from modules.jmath import map
 
-nn = NN(2, 10, 1)
+nn = NN(2, 2, 1, 0.5)
 
 train_x = [[0, 0], [1, 0], [0, 1], [1, 1]]
 train_y = [[0], [1], [1], [0]]
@@ -20,7 +19,7 @@ def set_colors(row, col):
     for i in range(0, row*col):
         x = map((i%col)*side, 0, width, 0, 1)
         y = map(int(i/row)*side, 0, height, 0, 1)
-        guess = nn.guess([x, y])[0].matrix[0]
+        guess = nn.guess([x, y])[0].values[0]
         rgb = math.floor(guess*255)
         colors += [Color(rgb, rgb, rgb)]
 
@@ -33,7 +32,7 @@ width = 500
 height = 500
 screen = pygame.display.set_mode([width, height])
 
-side = 10
+side = 100
 rectangles = []
 rects_row = int(width/side)
 rects_col = int(height/side)
@@ -46,6 +45,7 @@ for i in range(0, rects_total):
     rectangles += [r]
 colors = set_colors(rects_row, rects_col)
 
+
 done = False
 while not done:
     screen.fill([255, 255, 255])
@@ -55,7 +55,7 @@ while not done:
             done = True
         if event.type == pygame.KEYDOWN:
             pass
-    for i in range(0, 1000):    
+    for i in range(0, 1000):
         data = next_data()
         nn.train(data[0], data[1])
     colors = set_colors(rects_row, rects_col)

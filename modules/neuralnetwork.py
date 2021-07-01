@@ -1,61 +1,58 @@
 from modules.jmath import Matrix
 import math
 
-LR = 0.05
-
 class NeuralNetwork():
-    def __init__(self, n_inputs, n_hidden, n_outputs):
-        self.n_i = n_inputs
-        self.n_h = n_hidden
-        self.n_o = n_outputs
+    def __init__(self, n_inputs, n_hidden, n_outputs, learning_rate):
+        self.inputs_number = n_inputs
+        self.hidden_number = n_hidden
+        self.outputs_number = n_outputs
+        self.learning_rate = learning_rate
 
-        self.HW = Matrix(n_hidden, n_inputs+1)
-        self.HW.rand(-1, 1)
+        # Initialize weights with random values between -1 and 1
+        self.IH_weights = Matrix(n_hidden, n_inputs+1)
+        self.IH_weights.rand(-1, 1)
+        self.HO_weights = Matrix(n_outputs, n_hidden+1)
+        self.HO_weights.rand(-1, 1)
 
-        self.OW = Matrix(n_outputs, n_hidden+1)
-        self.OW.rand(-1, 1)
-
-    def guess(self, inputs):
-        bias_input_list = inputs + [1]
-        input_matrix = Matrix(self.n_i+1, 1)
-        input_matrix.initValues(bias_input_list)
-        hidden = self.HW*input_matrix
-        hidden = NeuralNetwork.sigmoid(hidden)
+    def guess(self, inputs_array):
+        inputs = Matrix(self.inputs_number + 1, 1)
+        inputs.initValues(inputs_array + [1])
+        hidden_non_biased = self.IH_weights*inputs
+        hidden_non_biased = NeuralNetwork.sigmoid(hidden_non_biased)
         
-        hidden.matrix += [1]
-        hidden.n_rows += 1
-        output_matrix = self.OW*hidden
-        output_matrix = NeuralNetwork.sigmoid(output_matrix)
-        return output_matrix, hidden, input_matrix
+        hidden_array = hidden_non_biased.values + [1]
+        hidden = Matrix(self.hidden_number + 1, 1)
+        hidden.initValues(hidden_array)
+        outputs = self.HO_weights*hidden
+        outputs = NeuralNetwork.sigmoid(outputs)
+        return outputs, hidden, hidden_non_biased, inputs
 
-    def train(self, x, y):
-        for i in range(0, len(x)):
-            guess, hidden, input_m = self.guess(x[i])
-            y_m = Matrix(len(y[i]), 1)
-            y_m.initValues(y[i])
-            guess_error = y_m - guess
-            OW_t = self.OW.getTranspose()
-            hidden_error = OW_t*guess_error
+    def train(self, data_array, target_array):
+        for i in range(0, len(data_array)):
+            outputs, hidden, hidden_non_biased, inputs = self.guess(data_array[i])
+            target = Matrix(self.outputs_number, 1)
+            target.initValues(target_array[i])
+            outputs_error = target - outputs
+            HO_weights_transposed = self.HO_weights.getTranspose()
+            hidden_error = HO_weights_transposed*outputs_error
             
-            guess.f(NeuralNetwork.dsigmoid)
-            guess.hadamard(guess_error)
-            guess *= LR
-            delta_OW = guess*hidden.getTranspose()
-            self.OW += delta_OW
+            outputs.apply(NeuralNetwork.dsigmoid)
+            outputs.hadamard(outputs_error)
+            outputs *= self.learning_rate
+            HO_delta = outputs*hidden.getTranspose()
+            self.HO_weights += HO_delta
 
-            hidden.f(NeuralNetwork.dsigmoid)
+            hidden.apply(NeuralNetwork.dsigmoid)
             hidden.hadamard(hidden_error)
-            hidden *= LR
-            no_bias_hidden = Matrix(hidden.n_rows-1, 1)
-            no_bias_hidden.initValues(hidden.matrix[:hidden.n_rows-1])
-            delta_HW = no_bias_hidden*input_m.getTranspose()
-            self.HW += delta_HW
+            hidden *= self.learning_rate
+            IH_delta = hidden_non_biased*inputs.getTranspose()
+            self.IH_weights += IH_delta
 
-    # CHANGE TO USE MAP METHOD IN MATRIX
+    # CHANGE TO USE APPLY METHOD IN MATRIX
     @staticmethod
     def sigmoid(matrix):
         values = []
-        for m in matrix.matrix:
+        for m in matrix.values:
             values += [1/(1+math.exp(-m))]
         new_matrix = Matrix(matrix.n_rows, matrix.n_cols)
         new_matrix.initValues(values)
@@ -71,7 +68,7 @@ class NeuralNetwork():
     @staticmethod
     def threshhold(matrix):
         values = []
-        for m in matrix.matrix:
+        for m in matrix.values:
             if m < 0.5: values += [0]
             else: values += [1]
         new_matrix = Matrix(matrix.n_rows, matrix.n_cols)
