@@ -3,7 +3,7 @@ from modules.neuralnetwork import NeuralNetwork as NN
 from pygame import Color
 from modules.jmath import map
 
-nn = NN(2, 2, 1, 0.5)
+nn = NN(2, 2, 1, 0.05)
 
 train_x = [[0, 0], [1, 0], [0, 1], [1, 1]]
 train_y = [[0], [1], [1], [0]]
@@ -32,7 +32,7 @@ width = 500
 height = 500
 screen = pygame.display.set_mode([width, height])
 
-side = 100
+side = 5
 rectangles = []
 rects_row = int(width/side)
 rects_col = int(height/side)

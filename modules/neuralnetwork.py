@@ -42,9 +42,9 @@ class NeuralNetwork():
             HO_delta = outputs*hidden.getTranspose()
             self.HO_weights += HO_delta
 
-            hidden.apply(NeuralNetwork.dsigmoid)
-            hidden.hadamard(hidden_error)
-            hidden *= self.learning_rate
+            hidden_non_biased.apply(NeuralNetwork.dsigmoid)
+            hidden_non_biased.hadamard(hidden_error)
+            hidden_non_biased *= self.learning_rate
             IH_delta = hidden_non_biased*inputs.getTranspose()
             self.IH_weights += IH_delta
 
