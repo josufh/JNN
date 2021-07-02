@@ -1,4 +1,5 @@
 import random
+from typing import List
 
 def map(v, x1, x2, y1, y2):
     m = (y2 - y1)/(x2 - x1)
@@ -6,22 +7,37 @@ def map(v, x1, x2, y1, y2):
 
 class Matrix:
 
-    def __init__(self, rows, cols):
-        self.n_rows = rows
-        self.n_cols = cols
-        self.n_elements = rows*cols
-        self.values = []
-
-        for i in range(0, rows*cols):
-            self.values += [0]
-
-    def initValues(self, matrix):
-        length = len(matrix)
-        if length != self.n_elements:
-            print("MATRIX error on initValues: matrix aren't the same size.")
-            return
-        
-        self.values = matrix
+    def __init__(self, values=None, rows=0, cols=0):
+        if values != None:
+            if rows == 0 and cols != 0 and cols != len(values):
+                print("MATRIX error on init: cols and values len is not the same")
+                return None
+            self.n_rows = 1
+            self.n_cols = len(values)
+            if rows != 0:
+                if cols == 0:
+                    if rows != 0 and rows != len(values):
+                        print("MATRIX error on init: rows and values len is not the same")
+                        return None
+                    self.n_rows = len(values)
+                    self.n_cols = 1
+                else:
+                    self.n_rows = rows
+                    self.n_cols = cols                
+            self.n_elements = self.n_rows*self.n_cols
+            self.values = values
+        elif values == None:
+            if rows != 0 and cols != 0:
+                self.n_rows = rows
+                self.n_cols = cols
+                self.n_elements = rows * cols
+                values = []
+                for i in range(0, self.n_elements):
+                    values += [0]
+                self.values = values
+        else:
+            print("MATRIX init: Something went very wrong.")
+            return None
 
     def rand(self, min=0, max=1):
         for i in range(0, self.n_elements):
@@ -34,10 +50,7 @@ class Matrix:
             for j in range(0, self.n_rows):
                 col += [self.values[i + j*self.n_cols]]
             cols += col
-        temp = self.n_cols
-        self.n_cols = self.n_rows
-        self.n_rows = temp
-        self.initValues(cols)
+        self = Matrix(cols, self.cols, self.rows)
     
     def getTranspose(self):
         cols = []
@@ -46,16 +59,16 @@ class Matrix:
             for j in range(0, self.n_rows):
                 col += [self.values[i + j*self.n_cols]]
             cols += col
-        new_matrix = Matrix(self.n_cols, self.n_rows)
-        new_matrix.initValues(cols)
-        return new_matrix
+        return Matrix(cols, self.n_cols, self.n_rows)
     
     def apply(self, func):
         for i in range(0, self.n_elements):
             self.values[i] = func(self.values[i])
 
-    # CHECK IF MATRIX ARE THE SAME SIZE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     def hadamard(self, v):
+        if self.n_rows != v.n_rows or self.n_cols != v.n_cols:
+            print("MATRIX error on hadamard: matrix aren't the same size")
+        
         for i in range(0, self.n_elements):
             self.values[i] *= v.values[i]
 
@@ -72,9 +85,7 @@ class Matrix:
             for i in range(0, self.n_elements):
                 values[i] += v.values[i]
 
-        new_matrix = Matrix(self.n_rows, self.n_cols)
-        new_matrix.initValues(values)
-        return new_matrix
+        return Matrix(values, self.n_rows, self.n_cols)
 
     __radd__ = __add__
 
@@ -91,9 +102,8 @@ class Matrix:
             for i in range(0, self.n_elements):
                 values[i] -= v.values[i]
 
-        new_matrix = Matrix(self.n_rows, self.n_cols)
-        new_matrix.initValues(values)
-        return new_matrix
+        return Matrix(values, self.n_rows, self.n_cols)
+        
     
     __rsub__ = __sub__
 
@@ -102,16 +112,14 @@ class Matrix:
             values = self.values.copy()
             for i in range(0, self.n_elements):
                 values[i] *= v
-            new_matrix = Matrix(self.n_rows, self.n_cols)
-            new_matrix.initValues(values)
-            return new_matrix
+            return Matrix(values, self.n_rows, self.n_cols)
 
         if isinstance(v, Matrix):
             if self.n_cols != v.n_rows:
                 print("MATRIX error on mul: matrix aren't the proper size.")
                 return self
 
-            new_matrix = Matrix(self.n_rows, v.n_cols)
+            elements = self.n_rows*v.n_cols
             rows = []
             for i in range(0, self.n_rows):
                 row = []
@@ -125,16 +133,14 @@ class Matrix:
                     col += [v.values[i + j*v.n_cols]]
                 cols += [col]
             values = []
-            for i in range(0, new_matrix.n_elements):
+            for i in range(0, elements):
                 sum = 0
                 i_row = int(i/v.n_cols)
                 i_col = int(i%v.n_cols)
                 for j in range(0, self.n_cols):
                     sum += rows[i_row][j]*cols[i_col][j]
                 values += [sum]
-            new_matrix.initValues(values)
-            return new_matrix
-        return self
+            return Matrix(values, self.n_rows, v.n_cols)
 
     __rmul__ = __mul__
 

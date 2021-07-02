@@ -32,7 +32,7 @@ width = 500
 height = 500
 screen = pygame.display.set_mode([width, height])
 
-side = 5
+side = 20
 rectangles = []
 rects_row = int(width/side)
 rects_col = int(height/side)
@@ -55,7 +55,7 @@ while not done:
             done = True
         if event.type == pygame.KEYDOWN:
             pass
-    for i in range(0, 1000):
+    for i in range(0, 300):
         data = next_data()
         nn.train(data[0], data[1])
     colors = set_colors(rects_row, rects_col)

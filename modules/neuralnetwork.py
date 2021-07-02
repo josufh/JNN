@@ -9,20 +9,20 @@ class NeuralNetwork():
         self.learning_rate = learning_rate
 
         # Initialize weights with random values between -1 and 1
-        self.IH_weights = Matrix(n_hidden, n_inputs+1)
+        self.IH_weights = Matrix(rows=n_hidden, cols=n_inputs+1)
         self.IH_weights.rand(-1, 1)
-        self.HO_weights = Matrix(n_outputs, n_hidden+1)
+        self.HO_weights = Matrix(rows=n_outputs, cols=n_hidden+1)
         self.HO_weights.rand(-1, 1)
 
     def guess(self, inputs_array):
-        inputs = Matrix(self.inputs_number + 1, 1)
-        inputs.initValues(inputs_array + [1])
+        inputs = Matrix(inputs_array + [1], self.inputs_number + 1)
+        #inputs.initValues(inputs_array + [1])
         hidden_non_biased = self.IH_weights*inputs
         hidden_non_biased = NeuralNetwork.sigmoid(hidden_non_biased)
         
         hidden_array = hidden_non_biased.values + [1]
-        hidden = Matrix(self.hidden_number + 1, 1)
-        hidden.initValues(hidden_array)
+        hidden = Matrix(hidden_array, self.hidden_number + 1)
+        #hidden.initValues(hidden_array)
         outputs = self.HO_weights*hidden
         outputs = NeuralNetwork.sigmoid(outputs)
         return outputs, hidden, hidden_non_biased, inputs
@@ -30,8 +30,8 @@ class NeuralNetwork():
     def train(self, data_array, target_array):
         for i in range(0, len(data_array)):
             outputs, hidden, hidden_non_biased, inputs = self.guess(data_array[i])
-            target = Matrix(self.outputs_number, 1)
-            target.initValues(target_array[i])
+            target = Matrix(target_array[i], self.outputs_number)
+            #target.initValues(target_array[i])
             outputs_error = target - outputs
             HO_weights_transposed = self.HO_weights.getTranspose()
             hidden_error = HO_weights_transposed*outputs_error
@@ -42,10 +42,11 @@ class NeuralNetwork():
             HO_delta = outputs*hidden.getTranspose()
             self.HO_weights += HO_delta
 
-            hidden_non_biased.apply(NeuralNetwork.dsigmoid)
-            hidden_non_biased.hadamard(hidden_error)
-            hidden_non_biased *= self.learning_rate
-            IH_delta = hidden_non_biased*inputs.getTranspose()
+            hidden.apply(NeuralNetwork.dsigmoid)
+            hidden.hadamard(hidden_error)
+            hidden *= self.learning_rate
+            temporal = Matrix(hidden.values[:(hidden.n_rows-1)*hidden.n_cols], hidden.n_rows-1, hidden.n_cols)
+            IH_delta = temporal*inputs.getTranspose()
             self.IH_weights += IH_delta
 
     # CHANGE TO USE APPLY METHOD IN MATRIX
@@ -54,8 +55,8 @@ class NeuralNetwork():
         values = []
         for m in matrix.values:
             values += [1/(1+math.exp(-m))]
-        new_matrix = Matrix(matrix.n_rows, matrix.n_cols)
-        new_matrix.initValues(values)
+        new_matrix = Matrix(values, matrix.n_rows, matrix.n_cols)
+        #new_matrix.initValues(values)
         return new_matrix
 
     @staticmethod
@@ -71,6 +72,6 @@ class NeuralNetwork():
         for m in matrix.values:
             if m < 0.5: values += [0]
             else: values += [1]
-        new_matrix = Matrix(matrix.n_rows, matrix.n_cols)
-        new_matrix.initValues(values)
+        new_matrix = Matrix(values, matrix.n_rows, matrix.n_cols)
+        #new_matrix.initValues(values)
         return new_matrix
