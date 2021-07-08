@@ -16,22 +16,19 @@ class NeuralNetwork():
 
     def guess(self, inputs_array):
         inputs = Matrix(inputs_array + [1], self.inputs_number + 1)
-        #inputs.initValues(inputs_array + [1])
         hidden_non_biased = self.IH_weights*inputs
-        hidden_non_biased = NeuralNetwork.sigmoid(hidden_non_biased)
+        hidden_non_biased.apply(NeuralNetwork.sigmoid)
         
         hidden_array = hidden_non_biased.values + [1]
         hidden = Matrix(hidden_array, self.hidden_number + 1)
-        #hidden.initValues(hidden_array)
         outputs = self.HO_weights*hidden
-        outputs = NeuralNetwork.sigmoid(outputs)
-        return outputs, hidden, hidden_non_biased, inputs
+        outputs.apply(NeuralNetwork.sigmoid)
+        return outputs, hidden, inputs
 
     def train(self, data_array, target_array):
         for i in range(0, len(data_array)):
-            outputs, hidden, hidden_non_biased, inputs = self.guess(data_array[i])
+            outputs, hidden, inputs = self.guess(data_array[i])
             target = Matrix(target_array[i], self.outputs_number)
-            #target.initValues(target_array[i])
             outputs_error = target - outputs
             HO_weights_transposed = self.HO_weights.getTranspose()
             hidden_error = HO_weights_transposed*outputs_error
@@ -51,13 +48,8 @@ class NeuralNetwork():
 
     # CHANGE TO USE APPLY METHOD IN MATRIX
     @staticmethod
-    def sigmoid(matrix):
-        values = []
-        for m in matrix.values:
-            values += [1/(1+math.exp(-m))]
-        new_matrix = Matrix(values, matrix.n_rows, matrix.n_cols)
-        #new_matrix.initValues(values)
-        return new_matrix
+    def sigmoid(x):
+        return 1/(1+math.exp(-x))
 
     @staticmethod
     def dsigmoid(x, n=1):
@@ -73,5 +65,4 @@ class NeuralNetwork():
             if m < 0.5: values += [0]
             else: values += [1]
         new_matrix = Matrix(values, matrix.n_rows, matrix.n_cols)
-        #new_matrix.initValues(values)
         return new_matrix
