@@ -104,7 +104,6 @@ class Matrix:
 
         return Matrix(values, self.n_rows, self.n_cols)
         
-    
     __rsub__ = __sub__
 
     def __mul__(self, v):

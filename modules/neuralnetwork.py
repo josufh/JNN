@@ -46,7 +46,6 @@ class NeuralNetwork():
             IH_delta = temporal*inputs.getTranspose()
             self.IH_weights += IH_delta
 
-    # CHANGE TO USE APPLY METHOD IN MATRIX
     @staticmethod
     def sigmoid(x):
         return 1/(1+math.exp(-x))
@@ -59,10 +58,6 @@ class NeuralNetwork():
             return x * (1 - x)
 
     @staticmethod
-    def threshhold(matrix):
-        values = []
-        for m in matrix.values:
-            if m < 0.5: values += [0]
-            else: values += [1]
-        new_matrix = Matrix(values, matrix.n_rows, matrix.n_cols)
-        return new_matrix
+    def relu(x):
+        if x < 0: return 0
+        else: return x
